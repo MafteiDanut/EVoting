@@ -5,6 +5,13 @@ const CONTRACT_ADDRESS=process.env.CONTRACT_ADDRESS;
 const {ethers, network} =require("hardhat");
 const contract = require("../artifacts/contracts/EVoting.sol/eVoting.json");
 const prompt= require("prompt-sync")({sigint:true})
+const crypto=require("./electionUtils");
+
+function createBytesFromBigInt(number){
+  const amount = ethers.BigNumber.from(number);
+  const bytes=ethers.utils.hexZeroPad(amount.toHexString(), 32)
+  return bytes
+}
 
 //provider - Alchemy
 const alchemyProvider= new ethers.providers.AlchemyProvider("goerli",API_KEY);
@@ -17,19 +24,32 @@ const eVotingContract = new ethers.Contract(CONTRACT_ADDRESS,contract.abi,signer
 
 async function main(){
 
-    const test = prompt("Introdu ceva de test\n");
-    console.log('Ai introdus:'+test);
-    let adminAddresse=await eVotingContract.adminAddress();
-    console.log("The admin addresse is: "+adminAddresse);
+  const sessionDetails=await eVotingContract.session();
 
-    //await eVotingContract.setEligibleVoters(['0x60bD36338c16398DEe277293b4D5BdF1F2d2E17B']);
+  const timeStartRegistery=sessionDetails[0].toString();
+  const timeStopRegistery=sessionDetails[1].toString();
+  const timeStartVote=sessionDetails[2].toString();
+  const timeStopVote=sessionDetails[3].toString();
+  const timetoShowResult=sessionDetails[4].toString();
+  const generator=BigInt(sessionDetails[5]);
+  const module=BigInt(sessionDetails[6]);
+  const message=sessionDetails[7];
 
-    await eVotingContract.registrationToSession('0x3230000000000000000000000000000000000000000000000000000000000000')
-    .then(response=>{
-      console.log("Raspunsul este:"+response);
-    }).catch(error=>{
-      console.log("Eroare:"+error.reason);
-    })
+  while(Math.floor(Date.now() / 1000)<timeStopVote);
+
+  let votes=await eVotingContract.takeVotes();
+
+  for(let i=0;i<votes.length;++i){
+    votes[i]=BigInt(votes[i]);
+  }
+
+  const resultFinal=await crypto.computeResult(votes,module);
+
+  await eVotingContract.saveResult(createBytesFromBigInt(resultFinal)).then(response=>{
+    console.log(response);
+  }).catch(error =>{
+    console.log("Eroare: "+error.reason);
+  })
     
 }
 

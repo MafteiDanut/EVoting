@@ -28,26 +28,28 @@ contract eVoting{
     address[] eligibleVoters;
     Session public session;
 
-    constructor(uint timeStartRegistry,uint timeStopRegistry,uint timeStartVote,uint timeStopVote,bytes32 generator,bytes32 module,bytes32 message){
+    constructor(uint timeStartRegistry,uint timeStopRegistry,uint timeStartVote,uint timeStopVote,uint timeToShowResult,bytes32 generator,bytes32 module,bytes32 message){
         adminAddress=msg.sender;
 
         session.timeStartRegistry=timeStartRegistry;
         session.timeStopRegistry=timeStopRegistry;
         session.timeStartVote=timeStartVote;
         session.timeStopVote=timeStopVote;
+        session.timetoShowResult=timeToShowResult;
         session.generator=generator;
         session.module=module;
         session.message=message;
         
     }
 
-    function updateTimesForSession(uint timeStartRegistry,uint timeStopRegistry,uint timeStartVote,uint timeStopVote)public{
+    function updateTimesForSession(uint timeStartRegistry,uint timeStopRegistry,uint timeStartVote,uint timeStopVote,uint timeToShowResult)public{
         require(adminAddress==msg.sender,"Numai administratorul poate reseta timpii!");
 
         session.timeStartRegistry=timeStartRegistry;
         session.timeStopRegistry=timeStopRegistry;
         session.timeStartVote=timeStartVote;
         session.timeStopVote=timeStopVote;
+        session.timetoShowResult=timeToShowResult;
     }
 
     function updateMessageSession(bytes32 message)public{

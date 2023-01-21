@@ -38,9 +38,10 @@ async function main(){
     const timeStopRegistery=sessionDetails[1].toString();
     const timeStartVote=sessionDetails[2].toString();
     const timeStopVote=sessionDetails[3].toString();
-    const generator=BigInt(sessionDetails[4]);
-    const module=BigInt(sessionDetails[5]);
-    const message=sessionDetails[6];
+    const timetoShowResult=sessionDetails[4].toString();
+    const generator=BigInt(sessionDetails[5]);
+    const module=BigInt(sessionDetails[6]);
+    const message=sessionDetails[7];
 
     console.log('Sesiunea de inregistrare incepe la: '+new Date(parseInt(timeStartRegistery)*1000));
 
@@ -88,7 +89,8 @@ async function main(){
             let index;
 
             for(let i=0;i<publicValues.length;++i){
-                if(publicValue===BigInt(publicValues[i])){
+                publicValues[i]=BigInt(publicValues[i]);
+                if(publicValue===publicValues[i]){
                     index=i;
                 }
             }
@@ -104,29 +106,30 @@ async function main(){
 
             if(Math.floor(Date.now() / 1000)>timeStopVote){
                 console.log('\nNu ati votat la timp!\n')
-            }else if(reg=='Y'){
-                const vot=1n;
+            }else{
+                let vot;
+                if(reg==='Y'){
+                    vot=1n;
+                }
+                else{
+                    vot=0n;
+                }
                 //calculeaza vot
-                const make_vote=await crypto.makeVote(Y,vot,privateValue,generator,module); 
+                const make_vote=await crypto.makeVote(YValue,vot,privateValue,generator,module); 
                 //trimite vot criptat
 
-                await eVotingContract.vote(createBytesFromBigInt(make_vote)).then(response=>{
-                    console.log(response)
+                await eVotingContract.vote(createBytesFromBigInt(make_vote)).then(async response=>{
+                    
+                    while(Math.floor(Date.now() / 1000)<timetoShowResult);
+
+
+                    const result = await eVotingContract.takeResult()[1];
+
+                    console.log('Numar de voturi pentru:'+await crypto.printResultBrute(BigInt(result),generator,module)+' dintr-un total de '+publicValues.length);
                 }).catch(error=>{
                     console.log('Eroare '+error.reason);
                 })
-            }
-            else{
-                const vot=0n;
-                //calculeaza vot
-                const make_vote=await crypto.makeVote(Y,vot,privateValue,generator,module);
-
-                //trimite vot criptat
-                await eVotingContract.vote(createBytesFromBigInt(make_vote)).then(response=>{
-                    console.log(response)
-                }).catch(error=>{
-                    console.log('Eroare '+error.reason);
-                })
+        
             }
         
         }).catch(error=>{
