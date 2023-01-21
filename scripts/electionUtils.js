@@ -205,10 +205,14 @@ const election=async()=>{
     console.log(count);
     let privateValues=[]
     let publicValues=[]
-
+    /*
     let values=await module.exports.generateGeneratorAndModule();
     const generator=values[0];
     const moduleP=values[1];
+    */
+
+    const generator=7n;
+    const moduleP=await module.exports.generateBigNumberPrime();
 
     console.log('Generator:');
     console.log(generator);

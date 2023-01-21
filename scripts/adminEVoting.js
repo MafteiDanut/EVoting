@@ -38,12 +38,13 @@ async function main(){
   while(Math.floor(Date.now() / 1000)<timeStopVote);
 
   let votes=await eVotingContract.takeVotes();
-
+  let newVotes=[];
   for(let i=0;i<votes.length;++i){
-    votes[i]=BigInt(votes[i]);
+    newVotes.push(BigInt(votes[i]))
   }
+  console.log(newVotes)
 
-  const resultFinal=await crypto.computeResult(votes,module);
+  const resultFinal=await crypto.computeResult(newVotes,module);
 
   await eVotingContract.saveResult(createBytesFromBigInt(resultFinal)).then(response=>{
     console.log(response);

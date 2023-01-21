@@ -69,6 +69,13 @@ contract eVoting{
     function clearData()public{
         require(msg.sender==adminAddress,"Numai administratorul poate sterge datele!");
 
+
+        for(uint i=0;i<eligibleVoters.length;++i){
+            voters[eligibleVoters[i]].voted=false;
+            voters[eligibleVoters[i]].registered=false;
+
+        }
+
         delete session;
         delete eligibleVoters;
 
@@ -93,6 +100,7 @@ contract eVoting{
         
         require(session.timeStartRegistry< block.timestamp,"Inca nu va puteti inregistra!");
         require(session.timeStopRegistry> block.timestamp,"Nu va mai puteti inregistra!");
+        require(voters[msg.sender].registered==false,'Va puteti inregistra de doua ori!');
 
         bool eligible=false;
 

@@ -37,8 +37,8 @@
       ]
     },
     "C:\\Users\\danut\\OneDrive\\Desktop\\Contract\\contracts\\EVoting.sol": {
-      "lastModificationDate": 1674326851087,
-      "contentHash": "a9103984f54834439cd52199348d7cec",
+      "lastModificationDate": 1674331458960,
+      "contentHash": "a02b4c17590ac48c17343b4d565df14c",
       "sourceName": "contracts/EVoting.sol",
       "solcConfig": {
         "version": "0.8.17",

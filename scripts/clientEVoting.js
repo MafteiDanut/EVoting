@@ -86,16 +86,17 @@ async function main(){
             console.log('Puteti sa votati!!!\n');
 
             const publicValues=await eVotingContract.takePublicValues();
+            let newPublicValues=[]
             let index;
 
             for(let i=0;i<publicValues.length;++i){
-                publicValues[i]=BigInt(publicValues[i]);
-                if(publicValue===publicValues[i]){
+                newpublicValues[i].push(BigInt(publicValues[i]));
+                if(publicValue===newPublicValues[i]){
                     index=i;
                 }
             }
 
-            const YValue=await crypto.computeYValueForOneUser(index,publicValues,module);
+            const YValue=await crypto.computeYValueForOneUser(index,newPublicValues,module);
             
             do{
                 reg=prompt(ethers.utils.parseBytes32String(message)+' Alegeti dintre Y/N?: ');
