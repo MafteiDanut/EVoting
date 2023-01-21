@@ -86,15 +86,21 @@ async function main(){
             console.log('Puteti sa votati!!!\n');
 
             const publicValues=await eVotingContract.takePublicValues();
+    
             let newPublicValues=[]
             let index;
 
             for(let i=0;i<publicValues.length;++i){
-                newpublicValues[i].push(BigInt(publicValues[i]));
+                newPublicValues.push(BigInt(publicValues[i]));
+            }
+
+            for(let i=0;i<newPublicValues.length;++i){
                 if(publicValue===newPublicValues[i]){
                     index=i;
                 }
             }
+
+            console.log(newPublicValues)
 
             const YValue=await crypto.computeYValueForOneUser(index,newPublicValues,module);
             
@@ -124,9 +130,11 @@ async function main(){
                     while(Math.floor(Date.now() / 1000)<timetoShowResult);
 
 
-                    const result = await eVotingContract.takeResult()[1];
+                    const result = await eVotingContract.takeResult();
 
-                    console.log('Numar de voturi pentru:'+await crypto.printResultBrute(BigInt(result),generator,module)+' dintr-un total de '+publicValues.length);
+                    const finalResult=result[1];
+
+                    console.log('Numar de voturi pentru:'+await crypto.printResultBrute(BigInt(finalResult),generator,module)+' dintr-un total de '+publicValues.length);
                 }).catch(error=>{
                     console.log('Eroare '+error.reason);
                 })

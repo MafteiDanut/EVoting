@@ -34,7 +34,8 @@ async function main(){
   const generator=BigInt(sessionDetails[5]);
   const module=BigInt(sessionDetails[6]);
   const message=sessionDetails[7];
-
+  
+  
   while(Math.floor(Date.now() / 1000)<timeStopVote);
 
   let votes=await eVotingContract.takeVotes();
@@ -46,12 +47,12 @@ async function main(){
 
   const resultFinal=await crypto.computeResult(newVotes,module);
 
-  await eVotingContract.saveResult(createBytesFromBigInt(resultFinal)).then(response=>{
-    console.log(response);
+  await eVotingContract.saveResult(await createBytesFromBigInt(resultFinal)).then(response=>{
+  
   }).catch(error =>{
     console.log("Eroare: "+error.reason);
   })
-    
+  
 }
 
 main().then(()=>process.exit(0))
