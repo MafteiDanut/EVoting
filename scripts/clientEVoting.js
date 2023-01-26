@@ -126,6 +126,9 @@ async function main(){
                 //trimite vot criptat
 
                 await eVotingContract.vote(createBytesFromBigInt(make_vote)).then(async response=>{
+
+                    console.log('Ati votat cu succes!')
+                    console.log('Va rog sa asteptati pana cand se afiseaza rezultatele...')
                     
                     while(Math.floor(Date.now() / 1000)<timetoShowResult);
 

@@ -35,7 +35,7 @@ async function main(){
   const module=BigInt(sessionDetails[6]);
   const message=sessionDetails[7];
   
-  
+  console.log('Se asteapta pana cand sesiunea de votare s-a terminat....');
   while(Math.floor(Date.now() / 1000)<timeStopVote);
 
   let votes=await eVotingContract.takeVotes();
